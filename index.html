@@ -550,6 +550,10 @@
     border: 1px solid rgba(34, 197, 94, 0.25);
   }
   .skin-node .card-link:hover { border-color: var(--nd-green); color: var(--nd-green); }
+  /* the seeder answers DNS, not HTTP, so this is a readout and not a link */
+  .seed-status { cursor: default; }
+  .seed-status.up small { color: var(--nd-green); }
+  .seed-status.down small { color: #ef9a9a; }
 
   /* ── official strip ── */
   .official {
@@ -785,7 +789,7 @@
       <div><span class="p">$</span> veild -seednode=seed.veil-info.org</div>
     </div>
     <div class="card-links">
-      <a class="card-link" href="https://seed.veil-info.org" target="_blank" rel="noopener">seed.veil-info.org <small>STATUS</small></a>
+      <span class="card-link seed-status" id="seed-status">seed.veil-info.org <small id="seed-count">CHECKING…</small></span>
     </div>
   </section>
 
@@ -798,10 +802,10 @@
       <h3>MARKETS</h3>
       <ul>
         <li><a href="https://veil-info.org" target="_blank" rel="noopener">Live Dashboard</a></li>
-        <li><a href="https://veil-info.org/nonkyc-btc" target="_blank" rel="noopener">VEIL / BTC</a></li>
-        <li><a href="https://veil-info.org/nonkyc-usdt" target="_blank" rel="noopener">VEIL / USDT</a></li>
-        <li><a href="https://veil-info.org/nonkyc-usdc" target="_blank" rel="noopener">VEIL / USDC</a></li>
-        <li><a href="https://veil-info.org/nonkyc-xmr" target="_blank" rel="noopener">VEIL / XMR</a></li>
+        <li><a href="https://nonkyc.io/market/VEIL_BTC" target="_blank" rel="noopener">VEIL / BTC</a></li>
+        <li><a href="https://nonkyc.io/market/VEIL_USDT" target="_blank" rel="noopener">VEIL / USDT</a></li>
+        <li><a href="https://nonkyc.io/market/VEIL_USDC" target="_blank" rel="noopener">VEIL / USDC</a></li>
+        <li><a href="https://nonkyc.io/market/VEIL_XMR" target="_blank" rel="noopener">VEIL / XMR</a></li>
         <li><a href="https://nonkyc.io" target="_blank" rel="noopener">NonKYC Exchange</a></li>
       </ul>
     </div>
@@ -916,7 +920,15 @@
         if (s.height) $("s-height").textContent = s.height.toLocaleString("en-US");
         if (s.usd) $("s-usd").textContent = "$" + s.usd.toPrecision(3);
         if (s.avgBlock) $("s-avg").textContent = s.avgBlock.toFixed(1) + "s";
-        if (s.seed && s.seed.ips && s.seed.ips.length) renderIps(s.seed.ips);
+        if (s.seed) {
+          if (s.seed.ips && s.seed.ips.length) renderIps(s.seed.ips);
+          var box = $("seed-status");
+          box.classList.remove("up", "down");
+          box.classList.add(s.seed.up ? "up" : "down");
+          $("seed-count").textContent = s.seed.up
+            ? "● SERVING " + (s.seed.count || 0) + " PEERS"
+            : "● NOT ANSWERING";
+        }
         var diffs = s.diffs || {};
         $("d-pp").textContent = fmtDiff(diffs.progpow);
         $("d-rx").textContent = fmtDiff(diffs.randomx);
