@@ -263,6 +263,11 @@
     letter-spacing: 0.1em;
     opacity: 0.75;
   }
+  .link-soon {
+    border-style: dashed !important;
+    opacity: 0.65;
+  }
+  .link-soon:hover { transform: none; }
 
   /* ── skin: VeilStreet ── */
   .skin-street {
@@ -540,10 +545,13 @@
       <span class="badge badge-live">● DOWNLOADS</span>
     </div>
     <h2>Veil <span>Miners</span></h2>
-    <p class="card-desc">Maintained miners built for Veil. Verify every download against its published SHA256SUMS.</p>
+    <p class="card-desc">Maintained miners for every algo, plus a stratum proxy that serves solo work straight from your own node. Verify every download against its published SHA256SUMS.</p>
     <div class="card-links">
       <a class="card-link" href="https://github.com/Veil-Project/Veil-Miner/releases" target="_blank" rel="noopener">Veil-Miner <small>GPU · PROGPOW</small></a>
       <a class="card-link" href="https://github.com/ohcee/Veil-Miner-CPU/releases" target="_blank" rel="noopener">Veil-Miner-CPU <small>CPU · RANDOMX</small></a>
+      <a class="card-link" href="https://github.com/ohcee/Veil-Miner-SHA/releases" target="_blank" rel="noopener">Veil-Miner-SHA <small>GPU · SHA256D</small></a>
+      <a class="card-link" href="https://github.com/ohcee/veil-node-stratum-proxy" target="_blank" rel="noopener">node-stratum-proxy <small>SOLO · ALL ALGOS</small></a>
+      <span class="card-link link-soon">Veil Quick Miner <small>ONE CLICK · IN THE WORKS</small></span>
     </div>
   </section>
 
