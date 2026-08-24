@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>veil-info.org — Veil Network Hub</title>
+<meta name="description" content="Everything Veil in one place: live transaction explorers, miners, mining guides, the academy and faucet, chain snapshots, and network infrastructure. Community built.">
+<link rel="icon" type="image/svg+xml" href="veil-mark.svg">
+<style>
+  /* No web fonts, no analytics, no third party requests. */
+  :root {
+    /* base = Veil navy, anchored to the mark's #061243 */
+    --bg-0:      #03060f;
+    --bg-1:      #081228;
+    --panel:     rgba(10, 20, 46, 0.60);
+    --blue:      #12306e;
+    --blue-br:   #3b7df0;
+    --cyan:      #22e0d6;
+    --green:     #3dff9a;
+    --border:    rgba(63, 111, 214, 0.30);
+    --text:      #e4eaff;
+    --text-dim:  #9fb0d8;
+    --text-faint:#5f6d94;
+
+    /* VeilStreet card skin (the live site is purple) */
+    --vs-panel:  rgba(18, 11, 36, 0.72);
+    --vs-purple: #4B0082;
+    --vs-purple-br: #7b2fd6;
+    --vs-border: rgba(123, 47, 214, 0.32);
+    --magenta:   #d64bff;
+
+    /* mining hub daylight */
+    --mh-bg:     #ffffff;
+    --mh-bg2:    #eef1f5;
+    --mh-border: #d7dee8;
+    --mh-blue:   #0277bd;
+    --mh-text:   #1a2330;
+    --mh-text2:  #46556a;
+    --mh-rx:     #00838f;
+    --mh-pp:     #7b1fa2;
+    --mh-sha:    #c62828;
+
+    /* academy terminal */
+    --ac-bg:     #0d0f12;
+    --ac-bg2:    #131519;
+    --ac-border: #2a2f3a;
+    --ac-teal:   #00d4c8;
+    --ac-text:   #d4d8e0;
+    --ac-text2:  #8a90a0;
+
+    /* node room */
+    --nd-green:  #22c55e;
+
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --mono: "SF Mono", "JetBrains Mono", ui-monospace, "Cascadia Code", Menlo, Consolas, monospace;
+    --cond: "Barlow Condensed", "Arial Narrow", "Avenir Next Condensed", var(--sans);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 45%, var(--bg-0) 100%);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.55;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  a { color: inherit; }
+
+  /* ── header ── */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(3, 6, 15, 0.82);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .head-in {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+    height: 58px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    text-decoration: none;
+  }
+  .logo img { width: 28px; height: 28px; }
+  .logo-name {
+    font-family: var(--mono);
+    font-size: 1rem;
+    letter-spacing: 0.04em;
+    color: var(--text);
+  }
+  .logo-name b { color: var(--blue-br); font-weight: 700; }
+  nav { display: flex; gap: 0.2rem; flex-wrap: wrap; }
+  nav a {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0.35rem 0.65rem;
+    border-radius: 4px;
+    border: 1px solid transparent;
+    transition: all 0.18s ease;
+  }
+  nav a:hover {
+    color: var(--cyan);
+    border-color: var(--border);
+    background: rgba(59, 125, 240, 0.10);
+  }
+
+  /* ── hero ── */
+  .hero {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 4.5rem 1.25rem 2.5rem;
+    text-align: left;
+  }
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: var(--cyan);
+    margin-bottom: 1rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.3rem, 6vw, 3.8rem);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    line-height: 1.05;
+    max-width: 18ch;
+  }
+  .hero h1 span { color: var(--blue-br); }
+  .hero p {
+    margin-top: 1.1rem;
+    max-width: 62ch;
+    color: var(--text-dim);
+    font-size: 1.05rem;
+  }
+  .hero p a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(34,224,214,0.35); }
+  .hero p a:hover { border-bottom-color: var(--cyan); }
+
+  /* animated tx street under the hero, borrowed from VeilStreet */
+  .street {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.25rem;
+  }
+  .street-lane {
+    position: relative;
+    height: 26px;
+    border-top: 1px dashed rgba(63, 111, 214, 0.45);
+    overflow: hidden;
+  }
+  .car {
+    position: absolute;
+    top: 9px;
+    width: 22px;
+    height: 8px;
+    border-radius: 3px;
+    animation: drive 9s linear infinite;
+  }
+  .car-1 { background: var(--cyan);    animation-delay: 0s;   }
+  .car-2 { background: var(--blue-br); animation-delay: -3.2s; height: 6px; top: 11px; }
+  .mini-street .car-2 { background: var(--magenta); }
+  .car-3 { background: var(--green);   animation-delay: -6.1s; width: 14px; }
+  @keyframes drive {
+    from { left: -5%; }
+    to   { left: 103%; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .car { animation: none; left: 40%; }
+    .car-2 { left: 62%; }
+    .car-3 { left: 18%; }
+  }
+
+  /* ── grid ── */
+  .grid {
+    max-width: 1100px;
+    margin: 2.5rem auto 0;
+    padding: 0 1.25rem 3rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+
+  .card {
+    border-radius: 12px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .card:hover { transform: translateY(-3px); }
+
+  .badge {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    padding: 0.18rem 0.5rem;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .badge-live { color: var(--green); border: 1px solid rgba(61,255,154,0.4); }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 1.1rem 1.25rem 0.4rem;
+  }
+  .card-kicker {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.2em;
+  }
+  .card h2 {
+    padding: 0 1.25rem;
+    font-size: 1.45rem;
+    font-weight: 800;
+    letter-spacing: 0.01em;
+  }
+  .card-desc {
+    padding: 0.5rem 1.25rem 0;
+    font-size: 0.92rem;
+  }
+  .card-links {
+    margin-top: auto;
+    padding: 1rem 1.25rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .card-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    text-decoration: none;
+    padding: 0.55rem 0.75rem;
+    border-radius: 6px;
+    transition: all 0.16s ease;
+  }
+  .card-link small {
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    opacity: 0.75;
+  }
+
+  /* ── skin: VeilStreet ── */
+  .skin-street {
+    background: var(--vs-panel);
+    border: 1px solid var(--vs-border);
+    box-shadow: 0 0 34px rgba(75, 0, 130, 0.35);
+  }
+  .skin-street:hover { box-shadow: 0 0 44px rgba(123, 47, 214, 0.45); }
+  .skin-street .card-kicker { color: var(--magenta); }
+  .skin-street h2 { color: var(--cyan); }
+  .skin-street .card-desc { color: #a99fd0; }
+  .skin-street .card-link {
+    color: #e9e2ff;
+    background: rgba(75, 0, 130, 0.28);
+    border: 1px solid var(--vs-border);
+  }
+  .skin-street .card-link:hover { border-color: var(--cyan); color: var(--cyan); }
+  .mini-street {
+    margin: 0.9rem 1.25rem 0;
+    position: relative;
+    height: 20px;
+    border-top: 1px dashed rgba(123, 47, 214, 0.5);
+    border-bottom: 1px dashed rgba(123, 47, 214, 0.5);
+    overflow: hidden;
+  }
+  .mini-street .car { top: 6px; height: 7px; width: 18px; animation-duration: 5.5s; }
+
+  /* ── skin: mining hub daylight ── */
+  .skin-mining {
+    background: var(--mh-bg);
+    border: 1px solid var(--mh-border);
+    color: var(--mh-text);
+  }
+  .skin-mining .card-kicker { color: var(--mh-blue); }
+  .skin-mining h2 {
+    font-family: var(--cond);
+    font-weight: 900;
+    font-size: 1.7rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--mh-text);
+  }
+  .skin-mining h2 span { color: var(--mh-blue); }
+  .skin-mining .card-desc { color: var(--mh-text2); }
+  .algo-pills {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    padding: 0.8rem 1.25rem 0;
+  }
+  .pill {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.1em;
+    padding: 0.22rem 0.55rem;
+    border-radius: 3px;
+    color: #fff;
+  }
+  .pill-rx  { background: var(--mh-rx); }
+  .pill-pp  { background: var(--mh-pp); }
+  .pill-sha { background: var(--mh-sha); }
+  .skin-mining .card-link {
+    color: var(--mh-text);
+    background: var(--mh-bg2);
+    border: 1px solid var(--mh-border);
+  }
+  .skin-mining .card-link:hover { border-color: var(--mh-blue); color: var(--mh-blue); }
+  .skin-mining .badge-live { color: #2e7d32; border-color: rgba(46,125,50,0.45); }
+
+  /* ── skin: academy terminal ── */
+  .skin-academy {
+    background: var(--ac-bg);
+    border: 1px solid var(--ac-border);
+  }
+  .skin-academy .card-kicker { color: var(--ac-teal); }
+  .skin-academy h2 { font-family: var(--mono); font-size: 1.25rem; color: var(--ac-text); }
+  .skin-academy .card-desc { color: var(--ac-text2); }
+  .term {
+    margin: 0.9rem 1.25rem 0;
+    background: var(--ac-bg2);
+    border: 1px solid var(--ac-border);
+    border-radius: 6px;
+    padding: 0.7rem 0.85rem;
+    font-family: var(--mono);
+    font-size: 0.74rem;
+    line-height: 1.7;
+    color: var(--ac-text2);
+  }
+  .term .p { color: var(--ac-teal); }
+  .term .ok { color: var(--nd-green); }
+  .cursor {
+    display: inline-block;
+    width: 7px; height: 12px;
+    background: var(--ac-teal);
+    vertical-align: -1px;
+    animation: blink 1.1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+  .skin-academy .card-link {
+    color: var(--ac-text);
+    background: var(--ac-bg2);
+    border: 1px solid var(--ac-border);
+  }
+  .skin-academy .card-link:hover { border-color: var(--ac-teal); color: var(--ac-teal); }
+
+  /* ── skin: node room (snapshots + seeder) ── */
+  .skin-node {
+    background: #0a1410;
+    border: 1px solid rgba(34, 197, 94, 0.28);
+  }
+  .skin-node .card-kicker { color: var(--nd-green); }
+  .skin-node h2 { font-family: var(--mono); font-size: 1.25rem; color: #d9e8de; }
+  .skin-node .card-desc { color: #8fa89a; }
+  .node-facts {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    padding: 0.8rem 1.25rem 0;
+  }
+  .fact {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    color: var(--nd-green);
+    border: 1px solid rgba(34, 197, 94, 0.35);
+    border-radius: 3px;
+    padding: 0.2rem 0.5rem;
+  }
+  .skin-node .card-link {
+    color: #d9e8de;
+    background: rgba(34, 197, 94, 0.07);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+  }
+  .skin-node .card-link:hover { border-color: var(--nd-green); color: var(--nd-green); }
+
+  /* ── official strip ── */
+  .official {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.25rem 3.5rem;
+  }
+  .official-box {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: rgba(10, 20, 46, 0.5);
+    padding: 1.4rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .official-title {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--text-faint);
+    margin-bottom: 0.35rem;
+  }
+  .official-sub { color: var(--text-dim); font-size: 0.95rem; max-width: 48ch; }
+  .official-links { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .btn {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-decoration: none;
+    padding: 0.6rem 1rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition: all 0.16s ease;
+  }
+  .btn:hover { border-color: var(--cyan); color: var(--cyan); }
+  .btn-primary {
+    background: var(--blue);
+    border-color: var(--blue-br);
+  }
+  .btn-primary:hover { background: var(--blue-br); color: #fff; }
+
+  /* ── footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.6rem 1.25rem 2.2rem;
+  }
+  .foot-in {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+  }
+  .foot-in a { color: var(--text-dim); text-decoration: none; }
+  .foot-in a:hover { color: var(--cyan); }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-in">
+    <a class="logo" href="#">
+      <img src="veil-mark.svg" alt="Veil logo">
+      <span class="logo-name">veil<b>-info</b>.org</span>
+    </a>
+    <nav>
+      <a href="#explore">EXPLORE</a>
+      <a href="#mine">MINE</a>
+      <a href="#learn">LEARN</a>
+      <a href="#node">RUN A NODE</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-eyebrow">COMMUNITY TOOLS · VEIL NETWORK</div>
+  <h1>Everything <span>Veil</span>, one page.</h1>
+  <p>Live explorers, miners, mining guides, an interactive academy with a faucet, chain snapshots, and network infrastructure. All community built and open source for <a href="https://veil-project.com" target="_blank" rel="noopener">Veil</a>, the multi-algo proof of work privacy coin.</p>
+</section>
+
+<div class="street" aria-hidden="true">
+  <div class="street-lane">
+    <div class="car car-1"></div>
+    <div class="car car-2"></div>
+    <div class="car car-3"></div>
+  </div>
+</div>
+
+<main class="grid">
+
+  <!-- VeilStreet, in its own night skin -->
+  <section class="card skin-street" id="explore">
+    <div class="card-top">
+      <span class="card-kicker">EXPLORE</span>
+      <span class="badge badge-live">● LIVE</span>
+    </div>
+    <h2>VeilStreet</h2>
+    <p class="card-desc">Watch Veil transactions roll down the street in real time. A live visualizer and block explorer for both chains.</p>
+    <div class="mini-street" aria-hidden="true">
+      <div class="car car-1"></div>
+      <div class="car car-2"></div>
+    </div>
+    <div class="card-links">
+      <a class="card-link" href="https://street.veil-info.org" target="_blank" rel="noopener">street.veil-info.org <small>MAINNET</small></a>
+      <a class="card-link" href="https://testnet-street.veil-info.org" target="_blank" rel="noopener">testnet-street.veil-info.org <small>TESTNET</small></a>
+    </div>
+  </section>
+
+  <!-- Mining hub, daylight skin -->
+  <section class="card skin-mining" id="mine">
+    <div class="card-top">
+      <span class="card-kicker">MINE</span>
+      <span class="badge badge-live">● LIVE</span>
+    </div>
+    <h2>Mining <span>Hub</span></h2>
+    <p class="card-desc">Copy paste ready mining commands for every algo and pool, plus live difficulty charts. Windows, Linux, HiveOS, and macOS.</p>
+    <div class="algo-pills">
+      <span class="pill pill-rx">RANDOMX · CPU</span>
+      <span class="pill pill-pp">PROGPOW · GPU</span>
+      <span class="pill pill-sha">SHA256D</span>
+    </div>
+    <div class="card-links">
+      <a class="card-link" href="https://mining.veil-info.org" target="_blank" rel="noopener">mining.veil-info.org <small>GUIDES + CHARTS</small></a>
+    </div>
+  </section>
+
+  <!-- Miners, same daylight family -->
+  <section class="card skin-mining">
+    <div class="card-top">
+      <span class="card-kicker">MINE</span>
+      <span class="badge badge-live">● DOWNLOADS</span>
+    </div>
+    <h2>Veil <span>Miners</span></h2>
+    <p class="card-desc">Maintained miners built for Veil. Verify every download against its published SHA256SUMS.</p>
+    <div class="card-links">
+      <a class="card-link" href="https://github.com/Veil-Project/Veil-Miner/releases" target="_blank" rel="noopener">Veil-Miner <small>GPU · PROGPOW</small></a>
+      <a class="card-link" href="https://github.com/ohcee/Veil-Miner-CPU/releases" target="_blank" rel="noopener">Veil-Miner-CPU <small>CPU · RANDOMX</small></a>
+    </div>
+  </section>
+
+  <!-- Academy, terminal skin -->
+  <section class="card skin-academy" id="learn">
+    <div class="card-top">
+      <span class="card-kicker">LEARN</span>
+      <span class="badge badge-live">● LIVE</span>
+    </div>
+    <h2>veil@academy:~$</h2>
+    <p class="card-desc">Interactive lessons that take you from zero to running Veil, with a faucet that pays out real VEIL as you learn.</p>
+    <div class="term" aria-hidden="true">
+      <div><span class="p">$</span> start lesson-01 "What is Veil?"</div>
+      <div><span class="ok">✓</span> faucet dispensed real VEIL</div>
+      <div><span class="p">$</span> <span class="cursor"></span></div>
+    </div>
+    <div class="card-links">
+      <a class="card-link" href="https://academy.veil-info.org" target="_blank" rel="noopener">academy.veil-info.org <small>LESSONS + FAUCET</small></a>
+    </div>
+  </section>
+
+  <!-- Snapshots, node room skin -->
+  <section class="card skin-node" id="node">
+    <div class="card-top">
+      <span class="card-kicker">RUN A NODE</span>
+      <span class="badge badge-live">● QUARTERLY</span>
+    </div>
+    <h2>chain snapshots</h2>
+    <p class="card-desc">Skip the multi day initial sync. Download a recent mainnet snapshot, verify the checksum, and be on the tip in hours.</p>
+    <div class="node-facts">
+      <span class="fact">MAINNET</span>
+      <span class="fact">~25 GB</span>
+      <span class="fact">SHA256 VERIFIED</span>
+    </div>
+    <div class="card-links">
+      <a class="card-link" href="https://github.com/ohcee/veil-snapshots/releases" target="_blank" rel="noopener">veil-snapshots <small>RELEASES</small></a>
+    </div>
+  </section>
+
+  <!-- Seeder, node room skin -->
+  <section class="card skin-node">
+    <div class="card-top">
+      <span class="card-kicker">RUN A NODE</span>
+      <span class="badge badge-live">● LIVE</span>
+    </div>
+    <h2>dns seeder</h2>
+    <p class="card-desc">Serving fresh mainnet peer addresses since August 2026, so new nodes find the network on their first start. No config needed, but you can point at it directly:</p>
+    <div class="term" aria-hidden="true" style="margin: 0.9rem 1.25rem 0;">
+      <div><span class="p">$</span> veild -seednode=seed.veil-info.org</div>
+    </div>
+    <div class="card-links">
+      <a class="card-link" href="https://seed.veil-info.org" target="_blank" rel="noopener">seed.veil-info.org <small>STATUS</small></a>
+    </div>
+  </section>
+
+</main>
+
+<section class="official">
+  <div class="official-box">
+    <div>
+      <div class="official-title">OFFICIAL PROJECT</div>
+      <p class="official-sub">Wallet downloads, documentation, and the core repositories live with the Veil Project. Start there if you are brand new.</p>
+    </div>
+    <div class="official-links">
+      <a class="btn btn-primary" href="https://veil-project.com" target="_blank" rel="noopener">GET THE WALLET</a>
+      <a class="btn" href="https://github.com/Veil-Project" target="_blank" rel="noopener">GITHUB</a>
+      <a class="btn" href="https://discord.veil-project.com" target="_blank" rel="noopener">DISCORD</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="foot-in">
+    <span>VEIL-INFO.ORG · COMMUNITY BUILT · MIT</span>
+    <span>NO COOKIES · NO TRACKERS · NO THIRD PARTY REQUESTS</span>
+    <span><a href="https://github.com/ohcee" target="_blank" rel="noopener">GITHUB/OHCEE</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
