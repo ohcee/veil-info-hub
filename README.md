@@ -12,7 +12,7 @@ The front door for community built Veil tools. One static page linking everythin
 
 No build step, no dependencies, no web fonts, no analytics. One HTML file and the Veil mark. The page makes zero third party requests.
 
-Served with GitHub Pages at [veil-info.org](https://veil-info.org).
+Served with GitHub Pages at [hub.veil-info.org](https://hub.veil-info.org) for now, moving to the veil-info.org root later.
 
 ## License
 
