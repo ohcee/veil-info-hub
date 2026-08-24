@@ -187,6 +187,79 @@
     .car-3 { left: 18%; }
   }
 
+  /* ── live stats strip ── */
+  .stats {
+    max-width: 1100px;
+    margin: 1.5rem auto 0;
+    padding: 0 1.25rem;
+  }
+  .stats-box {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel);
+    padding: 1rem 1.25rem 1.1rem;
+  }
+  .stats-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.18em;
+    color: var(--text-faint);
+    margin-bottom: 0.9rem;
+  }
+  .stats-head .live-dot { color: var(--green); }
+  .stats-head a { color: var(--text-dim); text-decoration: none; }
+  .stats-head a:hover { color: var(--cyan); }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    color: var(--text-faint);
+    margin-bottom: 0.25rem;
+  }
+  .stat-val {
+    font-family: var(--mono);
+    font-size: 1.25rem;
+    color: var(--cyan);
+  }
+  .stat-sub {
+    font-family: var(--mono);
+    font-size: 0.66rem;
+    color: var(--text-dim);
+    margin-top: 0.15rem;
+  }
+  .diff-row {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--border);
+  }
+  .diff-cell {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+  .diff-cell b { font-weight: 400; color: var(--text); margin-left: 0.35rem; }
+  .diff-pp   { border-color: rgba(182, 120, 232, 0.4); } .diff-pp b   { color: #b678e8; }
+  .diff-rx   { border-color: rgba(77, 208, 225, 0.4); }  .diff-rx b   { color: #4dd0e1; }
+  .diff-sha  { border-color: rgba(239, 154, 154, 0.4); } .diff-sha b  { color: #ef9a9a; }
+  .diff-pos  { border-color: rgba(255, 213, 79, 0.35); } .diff-pos b  { color: #ffd54f; }
+
   /* ── grid ── */
   .grid {
     max-width: 1100px;
@@ -500,6 +573,40 @@
   </div>
 </div>
 
+<section class="stats">
+  <div class="stats-box">
+    <div class="stats-head">
+      <span><span class="live-dot">●</span> LIVE NETWORK</span>
+      <a href="https://street.veil-info.org" target="_blank" rel="noopener">DATA FROM STREET.VEIL-INFO.ORG</a>
+    </div>
+    <div class="stats-grid">
+      <div class="stat">
+        <div class="stat-label">BLOCK HEIGHT</div>
+        <div class="stat-val" id="s-height">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">VEIL PRICE</div>
+        <div class="stat-val" id="s-usd">—</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">NEXT SUPERBLOCK</div>
+        <div class="stat-val" id="s-super">—</div>
+        <div class="stat-sub" id="s-super-sub">&nbsp;</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">PEERS</div>
+        <div class="stat-val" id="s-peers">—</div>
+      </div>
+    </div>
+    <div class="diff-row">
+      <span class="diff-cell diff-pp">PROGPOW DIFF <b id="d-pp">—</b></span>
+      <span class="diff-cell diff-rx">RANDOMX DIFF <b id="d-rx">—</b></span>
+      <span class="diff-cell diff-sha">SHA256D DIFF <b id="d-sha">—</b></span>
+      <span class="diff-cell diff-pos">POS DIFF <b id="d-pos">—</b></span>
+    </div>
+  </div>
+</section>
+
 <main class="grid">
 
   <!-- VeilStreet, in its own night skin -->
@@ -630,6 +737,51 @@
     <span><a href="https://github.com/ohcee" target="_blank" rel="noopener">GITHUB/OHCEE</a></span>
   </div>
 </footer>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  function fmtDiff(v) {
+    if (!v) return "—";
+    if (v >= 1e9) return (v / 1e9).toFixed(1) + "G";
+    if (v >= 1e6) return (v / 1e6).toFixed(1) + "M";
+    if (v >= 1e3) return (v / 1e3).toFixed(1) + "k";
+    if (v >= 1) return v.toFixed(2);
+    return v.toPrecision(2);
+  }
+  function refresh() {
+    var ctl = new AbortController();
+    var t = setTimeout(function () { ctl.abort(); }, 8000);
+    fetch("https://street.veil-info.org/api/state", { signal: ctl.signal })
+      .then(function (r) { clearTimeout(t); return r.ok ? r.json() : null; })
+      .then(function (d) {
+        if (!d || !d.stats) return;
+        var s = d.stats;
+        if (s.height) $("s-height").textContent = s.height.toLocaleString("en-US");
+        if (s.usd) $("s-usd").textContent = "$" + s.usd.toPrecision(3);
+        if (s.nextSuperblock && s.height) {
+          var left = s.nextSuperblock - s.height;
+          $("s-super").textContent = left.toLocaleString("en-US") + " blocks";
+          if (s.avgBlock) {
+            var days = (left * s.avgBlock) / 86400;
+            $("s-super-sub").textContent = days >= 1
+              ? "~" + days.toFixed(1) + " days"
+              : "~" + (days * 24).toFixed(1) + " hours";
+          }
+        }
+        if (s.net && s.net.peers) $("s-peers").textContent = s.net.peers;
+        var diffs = s.diffs || {};
+        $("d-pp").textContent = fmtDiff(diffs.progpow);
+        $("d-rx").textContent = fmtDiff(diffs.randomx);
+        $("d-sha").textContent = fmtDiff(diffs.sha256d);
+        $("d-pos").textContent = fmtDiff(diffs.pos);
+      })
+      .catch(function () { /* feed unreachable, the dashes stay */ });
+  }
+  refresh();
+  setInterval(refresh, 60000);
+})();
+</script>
 
 </body>
 </html>
