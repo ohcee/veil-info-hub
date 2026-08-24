@@ -259,6 +259,81 @@
   .diff-rx   { border-color: rgba(77, 208, 225, 0.4); }  .diff-rx b   { color: #4dd0e1; }
   .diff-sha  { border-color: rgba(239, 154, 154, 0.4); } .diff-sha b  { color: #ef9a9a; }
   .diff-pos  { border-color: rgba(255, 213, 79, 0.35); } .diff-pos b  { color: #ffd54f; }
+  .addnode-row {
+    margin-top: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px dashed var(--border);
+  }
+  .addnode-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    color: var(--text-faint);
+    margin-bottom: 0.5rem;
+  }
+  .addnode-ips { display: flex; gap: 0.4rem; flex-wrap: wrap; }
+  .ip-chip {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    padding: 0.3rem 0.65rem;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+    background: rgba(59, 125, 240, 0.06);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.16s ease;
+  }
+  .ip-chip:hover { border-color: var(--cyan); color: var(--cyan); }
+  .ip-chip.copied { border-color: var(--green); color: var(--green); }
+  .ip-wait { cursor: default; color: var(--text-faint); }
+
+  /* ── link directory ── */
+  .linksec {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.25rem 3rem;
+  }
+  .links-title {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    color: var(--cyan);
+    margin-bottom: 1rem;
+  }
+  .links-box {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--panel);
+    padding: 1.4rem 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1.5rem 2rem;
+  }
+  .link-group h3 {
+    font-family: var(--mono);
+    font-size: 0.64rem;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    color: var(--text-faint);
+    margin-bottom: 0.6rem;
+  }
+  .link-group ul { list-style: none; }
+  .link-group li { margin-bottom: 0.35rem; }
+  .link-group a {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    text-decoration: none;
+    transition: color 0.16s ease;
+  }
+  .link-group a:hover { color: var(--cyan); }
+  .link-group small {
+    font-size: 0.62rem;
+    color: var(--text-faint);
+    letter-spacing: 0.06em;
+    margin-left: 0.3rem;
+  }
 
   /* ── grid ── */
   .grid {
@@ -555,6 +630,7 @@
       <a href="#mine">MINE</a>
       <a href="#learn">LEARN</a>
       <a href="#node">RUN A NODE</a>
+      <a href="#links">LINKS</a>
     </nav>
   </div>
 </header>
@@ -589,13 +665,8 @@
         <div class="stat-val" id="s-usd">—</div>
       </div>
       <div class="stat">
-        <div class="stat-label">NEXT SUPERBLOCK</div>
-        <div class="stat-val" id="s-super">—</div>
-        <div class="stat-sub" id="s-super-sub">&nbsp;</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">PEERS</div>
-        <div class="stat-val" id="s-peers">—</div>
+        <div class="stat-label">AVG BLOCK TIME</div>
+        <div class="stat-val" id="s-avg">—</div>
       </div>
     </div>
     <div class="diff-row">
@@ -603,6 +674,10 @@
       <span class="diff-cell diff-rx">RANDOMX DIFF <b id="d-rx">—</b></span>
       <span class="diff-cell diff-sha">SHA256D DIFF <b id="d-sha">—</b></span>
       <span class="diff-cell diff-pos">POS DIFF <b id="d-pos">—</b></span>
+    </div>
+    <div class="addnode-row">
+      <span class="addnode-label">CONNECT · LIVE PEERS FROM THE SEEDER · CLICK TO COPY addnode=</span>
+      <div class="addnode-ips" id="addnode-ips"><span class="ip-chip ip-wait">waiting for seeder…</span></div>
     </div>
   </div>
 </section>
@@ -716,6 +791,65 @@
 
 </main>
 
+<section class="linksec" id="links">
+  <div class="links-title">THE WIDER ECOSYSTEM · EVERYTHING ON VEIL-INFO.ORG</div>
+  <div class="links-box">
+    <div class="link-group">
+      <h3>MARKETS</h3>
+      <ul>
+        <li><a href="https://veil-info.org" target="_blank" rel="noopener">Live Dashboard</a></li>
+        <li><a href="https://veil-info.org/nonkyc-btc" target="_blank" rel="noopener">VEIL / BTC</a></li>
+        <li><a href="https://veil-info.org/nonkyc-usdt" target="_blank" rel="noopener">VEIL / USDT</a></li>
+        <li><a href="https://veil-info.org/nonkyc-usdc" target="_blank" rel="noopener">VEIL / USDC</a></li>
+        <li><a href="https://veil-info.org/nonkyc-xmr" target="_blank" rel="noopener">VEIL / XMR</a></li>
+        <li><a href="https://nonkyc.io" target="_blank" rel="noopener">NonKYC Exchange</a></li>
+      </ul>
+    </div>
+    <div class="link-group">
+      <h3>WALLETS</h3>
+      <ul>
+        <li><a href="https://github.com/Veil-Project/veil/releases" target="_blank" rel="noopener">Core Wallet</a></li>
+        <li><a href="https://veil.tools/" target="_blank" rel="noopener">Light Wallet</a></li>
+        <li><a href="https://zelcore.io" target="_blank" rel="noopener">Zelcore</a></li>
+      </ul>
+    </div>
+    <div class="link-group">
+      <h3>POOLS</h3>
+      <ul>
+        <li><a href="https://fastpool.xyz/veil-rx/" target="_blank" rel="noopener">Fastpool <small>RANDOMX</small></a></li>
+        <li><a href="https://veil.yadaminers.pl/" target="_blank" rel="noopener">yadaminers <small>PROGPOW</small></a></li>
+      </ul>
+    </div>
+    <div class="link-group">
+      <h3>MORE MINERS</h3>
+      <ul>
+        <li><a href="https://github.com/trexminer/T-Rex" target="_blank" rel="noopener">T-Rex <small>NVIDIA</small></a></li>
+        <li><a href="https://github.com/TrailingStop/TT-Miner-release" target="_blank" rel="noopener">TT-Miner <small>NVIDIA</small></a></li>
+        <li><a href="https://github.com/andru-kun/wildrig-multi/releases" target="_blank" rel="noopener">WildRig <small>AMD</small></a></li>
+        <li><a href="https://github.com/Rakni1988/cpuminer-opt-veil" target="_blank" rel="noopener">cpuminer-opt-veil <small>CPU SHA</small></a></li>
+      </ul>
+    </div>
+    <div class="link-group">
+      <h3>COMMUNITY</h3>
+      <ul>
+        <li><a href="https://veil-project.com" target="_blank" rel="noopener">Veil Project</a></li>
+        <li><a href="https://veil-project.com/blog/" target="_blank" rel="noopener">Blog</a></li>
+        <li><a href="https://discord.veil-project.com" target="_blank" rel="noopener">Discord</a></li>
+        <li><a href="https://t.me/VEILProject" target="_blank" rel="noopener">Telegram</a></li>
+      </ul>
+    </div>
+    <div class="link-group">
+      <h3>SUPPORT</h3>
+      <ul>
+        <li><a href="https://veil.freshdesk.com/support/home" target="_blank" rel="noopener">Help Desk</a></li>
+        <li><a href="https://veil.freshdesk.com/support/solutions/articles/43000468343-staking-faq" target="_blank" rel="noopener">Staking FAQ</a></li>
+        <li><a href="https://veil-project.com/faqs/" target="_blank" rel="noopener">FAQs</a></li>
+        <li><a href="https://explorer.veil-project.com" target="_blank" rel="noopener">Official Explorer</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
 <section class="official">
   <div class="official-box">
     <div>
@@ -741,6 +875,28 @@
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
+  function renderIps(ips) {
+    var box = $("addnode-ips");
+    box.textContent = "";
+    ips.slice(0, 8).forEach(function (ip) {
+      var chip = document.createElement("button");
+      chip.className = "ip-chip";
+      chip.type = "button";
+      chip.textContent = ip;
+      chip.title = "copy addnode=" + ip;
+      chip.addEventListener("click", function () {
+        navigator.clipboard.writeText("addnode=" + ip).then(function () {
+          chip.classList.add("copied");
+          chip.textContent = "copied ✓";
+          setTimeout(function () {
+            chip.classList.remove("copied");
+            chip.textContent = ip;
+          }, 1200);
+        });
+      });
+      box.appendChild(chip);
+    });
+  }
   function fmtDiff(v) {
     if (!v) return "—";
     if (v >= 1e9) return (v / 1e9).toFixed(1) + "G";
@@ -759,17 +915,8 @@
         var s = d.stats;
         if (s.height) $("s-height").textContent = s.height.toLocaleString("en-US");
         if (s.usd) $("s-usd").textContent = "$" + s.usd.toPrecision(3);
-        if (s.nextSuperblock && s.height) {
-          var left = s.nextSuperblock - s.height;
-          $("s-super").textContent = left.toLocaleString("en-US") + " blocks";
-          if (s.avgBlock) {
-            var days = (left * s.avgBlock) / 86400;
-            $("s-super-sub").textContent = days >= 1
-              ? "~" + days.toFixed(1) + " days"
-              : "~" + (days * 24).toFixed(1) + " hours";
-          }
-        }
-        if (s.net && s.net.peers) $("s-peers").textContent = s.net.peers;
+        if (s.avgBlock) $("s-avg").textContent = s.avgBlock.toFixed(1) + "s";
+        if (s.seed && s.seed.ips && s.seed.ips.length) renderIps(s.seed.ips);
         var diffs = s.diffs || {};
         $("d-pp").textContent = fmtDiff(diffs.progpow);
         $("d-rx").textContent = fmtDiff(diffs.randomx);
