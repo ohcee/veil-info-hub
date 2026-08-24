@@ -29,17 +29,6 @@
     --vs-border: rgba(123, 47, 214, 0.32);
     --magenta:   #d64bff;
 
-    /* mining hub daylight */
-    --mh-bg:     #ffffff;
-    --mh-bg2:    #eef1f5;
-    --mh-border: #d7dee8;
-    --mh-blue:   #0277bd;
-    --mh-text:   #1a2330;
-    --mh-text2:  #46556a;
-    --mh-rx:     #00838f;
-    --mh-pp:     #7b1fa2;
-    --mh-sha:    #c62828;
-
     /* academy terminal */
     --ac-bg:     #0d0f12;
     --ac-bg2:    #131519;
@@ -443,47 +432,85 @@
   }
   .mini-street .car { top: 6px; height: 7px; width: 18px; animation-duration: 5.5s; }
 
-  /* ── skin: mining hub daylight ── */
+  /* ── skin: mining (dark, blue keyed) ──────────────────────────────────
+     Same rule the other three skins follow: take the card's own brand
+     color and drag it to a near-black tint, brighten the accent up the
+     same ramp. #0277bd on dark becomes #4fc3f7, the one blue nothing else
+     on the page uses (clear of --cyan, of the RandomX chip, of --blue-br).
+     Kept low chroma and close in weight to the neighbouring cards. */
   .skin-mining {
-    background: var(--mh-bg);
-    border: 1px solid var(--mh-border);
-    color: var(--mh-text);
+    position: relative;
+    background: linear-gradient(180deg, #101d2e 0%, #0d1826 55%, #0b1522 100%);
+    border: 1px solid rgba(79, 195, 247, 0.22);
+    color: #a1b3c7;
+    box-shadow: inset 0 1px 0 rgba(150, 210, 250, 0.07);
   }
-  .skin-mining .card-kicker { color: var(--mh-blue); }
+  /* the algo trio is the mining identity and the only thing both cards can
+     share, since VEIL MINERS has no pill row. Same three hues the
+     difficulty row publishes, faded out right so it reads as an indicator
+     edge and not a banner. */
+  .skin-mining::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg,
+      #4dd0e1 0%,
+      #b678e8 34%,
+      #ef9a9a 62%,
+      rgba(239, 154, 154, 0) 100%);
+    opacity: 0.6;
+    transition: opacity 0.18s ease;
+    pointer-events: none;
+  }
+  .skin-mining:hover { border-color: rgba(79, 195, 247, 0.34); }
+  .skin-mining:hover::before { opacity: 0.9; }
+  .skin-mining .card-kicker { color: #29b6f6; }
   .skin-mining h2 {
     font-family: var(--cond);
     font-weight: 900;
     font-size: 1.7rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
-    color: var(--mh-text);
+    color: #e3edf7;
   }
-  .skin-mining h2 span { color: var(--mh-blue); }
-  .skin-mining .card-desc { color: var(--mh-text2); }
+  .skin-mining h2 span { color: #4fc3f7; }
+  .skin-mining .card-desc { color: #a1b3c7; }
   .algo-pills {
     display: flex;
-    gap: 0.4rem;
+    gap: 0.35rem;
     flex-wrap: wrap;
     padding: 0.8rem 1.25rem 0;
   }
+  /* milled slots: the pill goes darker than the slab rather than tinted.
+     Darkening buys contrast where tinting spends it, which is what lets
+     these reuse the difficulty row's hexes verbatim, so one algo carries
+     exactly one colour everywhere on the page. */
   .pill {
     font-family: var(--mono);
     font-size: 0.62rem;
-    letter-spacing: 0.1em;
-    padding: 0.22rem 0.55rem;
+    letter-spacing: 0.08em;
+    padding: 0.22rem 0.45rem;
     border-radius: 3px;
-    color: #fff;
+    background: rgba(0, 0, 0, 0.30);
+    border: 1px solid rgba(120, 150, 190, 0.22);
+    color: #9fb0d8;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.45);
   }
-  .pill-rx  { background: var(--mh-rx); }
-  .pill-pp  { background: var(--mh-pp); }
-  .pill-sha { background: var(--mh-sha); }
+  .pill-rx  { color: #4dd0e1; border-color: rgba(77, 208, 225, 0.42); }
+  .pill-pp  { color: #b678e8; border-color: rgba(182, 120, 232, 0.42); }
+  .pill-sha { color: #ef9a9a; border-color: rgba(239, 154, 154, 0.42); }
   .skin-mining .card-link {
-    color: var(--mh-text);
-    background: var(--mh-bg2);
-    border: 1px solid var(--mh-border);
+    color: #dbe7f3;
+    background: rgba(79, 195, 247, 0.06);
+    border: 1px solid rgba(79, 195, 247, 0.20);
   }
-  .skin-mining .card-link:hover { border-color: var(--mh-blue); color: var(--mh-blue); }
-  .skin-mining .badge-live { color: #2e7d32; border-color: rgba(46,125,50,0.45); }
+  .skin-mining .card-link:hover {
+    border-color: #4fc3f7;
+    color: #4fc3f7;
+    background: rgba(79, 195, 247, 0.10);
+  }
+  .skin-mining .badge-live { color: var(--green); border-color: rgba(61, 255, 154, 0.4); }
 
   /* ── skin: academy terminal ── */
   .skin-academy {
