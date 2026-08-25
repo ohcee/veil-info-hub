@@ -142,7 +142,8 @@
   .hero p a { color: var(--cyan); text-decoration: none; border-bottom: 1px solid rgba(34,224,214,0.35); }
   .hero p a:hover { border-bottom-color: var(--cyan); }
 
-  /* animated tx street under the hero, borrowed from VeilStreet */
+  /* VeilStreet is a space scene, not a road, so this is a starfield the
+     Veilians cross rather than asphalt with lane markings */
   .street {
     max-width: 1100px;
     margin: 0 auto;
@@ -150,25 +151,62 @@
   }
   .street-lane {
     position: relative;
-    height: 34px;
-    border-top: 1px dashed rgba(63, 111, 214, 0.45);
+    height: 38px;
+    border-top: 1px solid rgba(63, 111, 214, 0.16);
     overflow: hidden;
   }
-  /* two pairs crossing the lane, each after a coin it never catches.
-     Same duration, offset by half, so the lane is never empty. */
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: #cfe0ff;
+    opacity: 0.5;
+    animation: twinkle 3.4s ease-in-out infinite;
+  }
+  .st-1 { left: 7%;  top: 9px;  }
+  .st-2 { left: 23%; top: 25px; animation-delay: -0.7s; opacity: 0.32; }
+  .st-3 { left: 41%; top: 6px;  animation-delay: -1.5s; }
+  .st-4 { left: 58%; top: 28px; animation-delay: -2.2s; opacity: 0.35; }
+  .st-5 { left: 74%; top: 11px; animation-delay: -0.3s; }
+  .st-6 { left: 90%; top: 24px; animation-delay: -1.9s; opacity: 0.3; }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.16; }
+    50%      { opacity: 0.6; }
+  }
+  /* three groups crossing on the same lap, spaced a third apart, so the
+     lane always has something in it instead of one lonely crawler */
   .chase {
     position: absolute;
-    top: 4px;
+    top: 5px;
     display: flex;
     align-items: center;
-    gap: 9px;
+    gap: 7px;
     animation: drive 7s linear infinite;
   }
-  .chase-b { animation-delay: -3.5s; gap: 3px; }
-  .miner {
+  .chase-a { gap: 4px; }
+  .chase-b { animation-delay: -2.33s; gap: 3px; }
+  .chase-c { animation-delay: -4.66s; }
+  .pick {
     display: block;
-    transform-origin: 22% 82%;
+    align-self: flex-end;
+    margin-right: -5px;
+    transform-origin: 30% 90%;
     animation: swing 0.55s ease-in-out infinite;
+  }
+  .rocket {
+    display: block;
+    animation: hover 1.1s ease-in-out infinite;
+    filter: drop-shadow(0 0 7px rgba(47, 224, 122, 0.4));
+  }
+  .flame { animation: flicker 0.16s steps(2) infinite; }
+  @keyframes hover {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-2px); }
+  }
+  @keyframes flicker {
+    0%   { opacity: 0.95; }
+    100% { opacity: 0.5; }
   }
   .veilian {
     display: block;
@@ -195,7 +233,6 @@
     opacity: 0;
     animation: spark 0.55s ease-out infinite;
   }
-  .spark-2 { animation-delay: 0.27s; width: 2px; height: 2px; }
   @keyframes swing {
     0%, 100% { transform: rotate(-18deg); }
     50%      { transform: rotate(8deg); }
@@ -217,30 +254,16 @@
     30%  { opacity: 0.9; }
     100% { opacity: 0; transform: translate(-7px, 5px) scale(0.4); }
   }
-  .car {
-    position: absolute;
-    top: 9px;
-    width: 22px;
-    height: 8px;
-    border-radius: 3px;
-    animation: drive 9s linear infinite;
-  }
-  .car-1 { background: var(--cyan);    animation-delay: 0s;   }
-  .car-2 { background: var(--blue-br); animation-delay: -3.2s; height: 6px; top: 11px; }
-  .mini-street .car-2 { background: var(--magenta); }
-  .car-3 { background: var(--green);   animation-delay: -6.1s; width: 14px; }
   @keyframes drive {
     from { left: -5%; }
     to   { left: 103%; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .car { animation: none; left: 40%; }
-    .car-2 { left: 62%; }
-    .car-3 { left: 18%; }
-    .chase { animation: none; left: 20%; }
-    .chase-b { left: 62%; }
-    .miner, .coin, .veilian, .bag { animation: none; }
-    .miner { transform: rotate(-8deg); }
+    .chase { animation: none; left: 10%; }
+    .chase-b { left: 44%; }
+    .chase-c { left: 76%; }
+    .coin, .veilian, .bag, .pick, .rocket, .flame, .star { animation: none; }
+    .pick { transform: rotate(-8deg); }
     .spark { display: none; }
   }
 
@@ -468,11 +491,6 @@
     letter-spacing: 0.1em;
     opacity: 0.75;
   }
-  .link-soon {
-    border-style: dashed !important;
-    opacity: 0.65;
-  }
-  .link-soon:hover { transform: none; }
 
   /* ── skin: VeilStreet ── */
   .skin-street {
@@ -490,15 +508,25 @@
     border: 1px solid var(--vs-border);
   }
   .skin-street .card-link:hover { border-color: var(--cyan); color: var(--cyan); }
+  /* a block crossing the card's own patch of sky */
   .mini-street {
     margin: 0.9rem 1.25rem 0;
     position: relative;
-    height: 20px;
-    border-top: 1px dashed rgba(123, 47, 214, 0.5);
-    border-bottom: 1px dashed rgba(123, 47, 214, 0.5);
+    height: 24px;
+    border-top: 1px solid rgba(123, 47, 214, 0.28);
+    border-bottom: 1px solid rgba(123, 47, 214, 0.28);
     overflow: hidden;
   }
-  .mini-street .car { top: 6px; height: 7px; width: 18px; animation-duration: 5.5s; }
+  .mini-street .star { top: 6px; }
+  .mini-street .st-3 { top: 16px; }
+  .mini-street .st-5 { top: 9px; }
+  .mini-rocket {
+    position: absolute;
+    top: 2px;
+    display: block;
+    animation: drive 5.5s linear infinite;
+    filter: drop-shadow(0 0 6px rgba(47, 224, 122, 0.4));
+  }
 
   /* ── skin: mining (dark, blue keyed) ──────────────────────────────────
      Same rule the other three skins follow: take the card's own brand
@@ -742,17 +770,27 @@
 
 <div class="street" aria-hidden="true">
   <div class="street-lane">
+    <span class="star st-1"></span><span class="star st-2"></span><span class="star st-3"></span>
+    <span class="star st-4"></span><span class="star st-5"></span><span class="star st-6"></span>
     <div class="chase chase-a">
-      <span class="miner">
-        <svg viewBox="0 0 24 24" width="23" height="23">
+      <span class="pick">
+        <svg viewBox="0 0 24 24" width="19" height="19">
           <path d="M5.8 20.4 L13 11.8" stroke="#a9764a" stroke-width="2.6" stroke-linecap="round" fill="none"/>
           <path d="M2.4 12.6 C5.6 6.4, 15.4 4.4, 20.6 7.6 C16 8.2, 9.2 10.2, 6.4 15.2 Z" fill="#d7e3f0"/>
           <path d="M2.4 12.6 C5.6 6.4, 15.4 4.4, 20.6 7.6 C16.4 6.9, 8.4 8.8, 5.2 13.4 Z" fill="#9fb3c9"/>
           <circle cx="12.9" cy="11.6" r="1.7" fill="#7d8fa6"/>
         </svg>
       </span>
+      <span class="veilian"><svg viewBox="0 0 24 24" width="24" height="24">
+          <path d="M8.6 8.2 L6.6 4.4" stroke="#2aa35c" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M15.4 8.2 L17.4 4.4" stroke="#2aa35c" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="6.3" cy="3.7" r="1.8" fill="#7ef7d0"/>
+          <circle cx="17.7" cy="3.7" r="1.8" fill="#7ef7d0"/>
+          <ellipse cx="12" cy="19.6" rx="4.4" ry="3.6" fill="#249152"/>
+          <ellipse cx="12" cy="12.4" rx="6.5" ry="6.6" fill="#34c46f"/>
+          <path d="M7.8 9.8 L12 17 L16.2 9.8" fill="none" stroke="#12205c" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></span>
       <span class="spark spark-1"></span>
-      <span class="spark spark-2"></span>
       <span class="coin">
         <svg viewBox="0 0 20 20" width="17" height="17">
           <circle cx="10" cy="10" r="9" fill="#f5c542"/>
@@ -764,20 +802,32 @@
     </div>
     <div class="chase chase-b">
       <span class="bag">
-        <svg viewBox="0 0 24 24" width="20" height="20">
+        <svg viewBox="0 0 24 24" width="19" height="19">
           <path d="M9.8 3.2 L14.2 3.2 L13.7 6 L10.3 6 Z" fill="#8a6636"/>
           <path d="M10.2 6.2 C6 8.3, 3.6 13, 4.6 17.3 C5.4 20.5, 8.4 21.8, 12 21.8 C15.6 21.8, 18.6 20.5, 19.4 17.3 C20.4 13, 18 8.3, 13.8 6.2 Z" fill="#c9a06a"/>
           <rect x="8.8" y="5.2" width="6.4" height="1.9" rx="0.95" fill="#7a5a2e"/>
           <path d="M9.2 11.6 L12 17.6 L14.8 11.6" fill="none" stroke="#3d2c06" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
-      <span class="veilian">
-        <svg viewBox="0 0 24 24" width="23" height="23">
-          <path d="M12 3 C8 3, 6 7.2, 5.6 12 C5.3 15.6, 4.2 18.4, 3.2 20.6 C6.5 21.2, 17.5 21.2, 20.8 20.6 C19.8 18.4, 18.7 15.6, 18.4 12 C18 7.2, 16 3, 12 3 Z" fill="#4B0082"/>
-          <path d="M12 3 C8 3, 6 7.2, 5.6 12 C7.6 12.8, 16.4 12.8, 18.4 12 C18 7.2, 16 3, 12 3 Z" fill="#7b2fd6"/>
-          <path d="M12 5.6 C10 5.6, 8.9 7.4, 8.9 9.3 C8.9 11.2, 10.3 12.2, 12 12.2 C13.7 12.2, 15.1 11.2, 15.1 9.3 C15.1 7.4, 14 5.6, 12 5.6 Z" fill="#0a0616"/>
-          <circle cx="10.7" cy="9.3" r="0.9" fill="#22e0d6"/>
-          <circle cx="13.3" cy="9.3" r="0.9" fill="#22e0d6"/>
+      <span class="veilian"><svg viewBox="0 0 24 24" width="24" height="24">
+          <path d="M8.6 8.2 L6.6 4.4" stroke="#2aa35c" stroke-width="1.5" stroke-linecap="round"/>
+          <path d="M15.4 8.2 L17.4 4.4" stroke="#2aa35c" stroke-width="1.5" stroke-linecap="round"/>
+          <circle cx="6.3" cy="3.7" r="1.8" fill="#7ef7d0"/>
+          <circle cx="17.7" cy="3.7" r="1.8" fill="#7ef7d0"/>
+          <ellipse cx="12" cy="19.6" rx="4.4" ry="3.6" fill="#249152"/>
+          <ellipse cx="12" cy="12.4" rx="6.5" ry="6.6" fill="#34c46f"/>
+          <path d="M7.8 9.8 L12 17 L16.2 9.8" fill="none" stroke="#12205c" stroke-width="2.9" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg></span>
+    </div>
+    <div class="chase chase-c">
+      <span class="rocket">
+        <svg viewBox="0 0 26 20" width="33" height="25">
+          <path d="M7.5 4.6 L2.6 7.6 L7.5 9.4 Z" fill="#2fe07a"/>
+          <path d="M7.5 10.6 L2.6 12.4 L7.5 15.4 Z" fill="#2fe07a"/>
+          <path d="M6.6 6.6 C6.6 5.6, 7.4 5.2, 8.4 5.2 L15 5.2 C19.6 5.2, 23 7.6, 24.2 10 C23 12.4, 19.6 14.8, 15 14.8 L8.4 14.8 C7.4 14.8, 6.6 14.4, 6.6 13.4 Z" fill="#523387" stroke="#2fe07a" stroke-width="1.5"/>
+          <ellipse cx="18.4" cy="10" rx="3.2" ry="2.7" fill="#0d1030"/>
+          <path d="M10.6 7.6 L12.6 13 L14.6 7.6" fill="none" stroke="#c6b4e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.6 7.8 L0.8 10 L6.6 12.2 Z" fill="#7ef7d0" class="flame"/>
         </svg>
       </span>
     </div>
@@ -826,10 +876,19 @@
       <span class="badge badge-live">● LIVE</span>
     </div>
     <h2>VeilStreet</h2>
-    <p class="card-desc">Watch Veil transactions roll down the street in real time. A live visualizer and block explorer for both chains.</p>
+    <p class="card-desc">Every block launches as a rocket over a living Veil world, with transactions arriving in real time. A visualizer and block explorer for both chains.</p>
     <div class="mini-street" aria-hidden="true">
-      <div class="car car-1"></div>
-      <div class="car car-2"></div>
+      <span class="star st-1"></span><span class="star st-3"></span><span class="star st-5"></span>
+      <span class="mini-rocket">
+        <svg viewBox="0 0 26 20" width="26" height="20">
+          <path d="M7.5 4.6 L2.6 7.6 L7.5 9.4 Z" fill="#2fe07a"/>
+          <path d="M7.5 10.6 L2.6 12.4 L7.5 15.4 Z" fill="#2fe07a"/>
+          <path d="M6.6 6.6 C6.6 5.6, 7.4 5.2, 8.4 5.2 L15 5.2 C19.6 5.2, 23 7.6, 24.2 10 C23 12.4, 19.6 14.8, 15 14.8 L8.4 14.8 C7.4 14.8, 6.6 14.4, 6.6 13.4 Z" fill="#523387" stroke="#2fe07a" stroke-width="1.5"/>
+          <ellipse cx="18.4" cy="10" rx="3.2" ry="2.7" fill="#0d1030"/>
+          <path d="M10.6 7.6 L12.6 13 L14.6 7.6" fill="none" stroke="#c6b4e8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M6.6 7.8 L0.8 10 L6.6 12.2 Z" fill="#7ef7d0" class="flame"/>
+        </svg>
+      </span>
     </div>
     <div class="card-links">
       <a class="card-link" href="https://street.veil-info.org" target="_blank" rel="noopener">street.veil-info.org <small>MAINNET</small></a>
@@ -862,13 +921,13 @@
       <span class="badge badge-live">● DOWNLOADS</span>
     </div>
     <h2>Veil <span>Miners</span></h2>
-    <p class="card-desc">Maintained miners for every algo, plus a stratum proxy that serves solo work straight from your own node. Verify every download against its published SHA256SUMS.</p>
+    <p class="card-desc">Maintained miners for every algo, a one click miner if you would rather not touch a command line, and a stratum proxy that serves solo work straight from your own node. Verify every download against its published SHA256SUMS.</p>
     <div class="card-links">
       <a class="card-link" href="https://github.com/Veil-Project/Veil-Miner/releases" target="_blank" rel="noopener">Veil-Miner <small>GPU · PROGPOW</small></a>
       <a class="card-link" href="https://github.com/ohcee/Veil-Miner-CPU/releases" target="_blank" rel="noopener">Veil-Miner-CPU <small>CPU · RANDOMX</small></a>
       <a class="card-link" href="https://github.com/ohcee/Veil-Miner-SHA/releases" target="_blank" rel="noopener">Veil-Miner-SHA <small>GPU · SHA256D</small></a>
       <a class="card-link" href="https://github.com/ohcee/veil-node-stratum-proxy" target="_blank" rel="noopener">node-stratum-proxy <small>SOLO · ALL ALGOS</small></a>
-      <span class="card-link link-soon">Veil Quick Miner <small>ONE CLICK · IN THE WORKS</small></span>
+      <a class="card-link" href="https://github.com/ohcee/veil-quickminer/releases/latest" target="_blank" rel="noopener">Veil Quick Miner <small>ONE CLICK · ALL ALGOS</small></a>
     </div>
   </section>
 
